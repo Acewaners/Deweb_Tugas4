@@ -14,8 +14,7 @@ defineOptions({
         <!-- Column 1: Brand & Subscribe -->
         <div class="space-y-4 sm:col-span-2 lg:col-span-1">
           <h3 class="text-xl md:text-2xl font-bold text-white">Emotix</h3>
-          <p class="text-base md:text-lg font-medium text-white">Subscribe</p>
-          <p class="text-sm text-white/90">Get 10% off your first order</p>
+          <p class="text-sm text-white/90">10% Discount on First Purchase for All Products!</p>
 
           <!-- Email Input -->
           <div class="relative mt-4 max-w-sm">
@@ -38,11 +37,11 @@ defineOptions({
           <h4 class="text-base md:text-lg font-bold text-white mb-4 md:mb-6">Support</h4>
           <div class="space-y-2 md:space-y-3 text-sm text-white/90">
             <p class="leading-relaxed">
-              Sumber Rejo, Kariangau,<br />
+              Sei Wain KM. 15, Karang Joang,<br />
               Balikpapan Utara, Kalimantan Timur.
             </p>
 
-            <p>hariyatunnasifa@gmail.com</p>
+            <p>emotixxgo@gmail.com</p>
             <p>0852-4666-4332</p>
           </div>
         </div>

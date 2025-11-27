@@ -1,12 +1,17 @@
 <script setup>
 import { HeartIcon, EyeIcon } from '@heroicons/vue/24/outline'
 import { StarIcon } from '@heroicons/vue/24/solid'
+import { addToCart } from '@/stores/cartStore'
 
 defineOptions({
   name: 'ProductCard',
 })
 
-defineProps({
+const props = defineProps({
+  id: {
+    type: [String, Number],
+    required: true,
+  },
   title: {
     type: String,
     required: true,
@@ -32,6 +37,15 @@ defineProps({
     default: '/airpods.png',
   },
 })
+
+const handleAddToCart = () => {
+  addToCart({
+    id: props.id,
+    title: props.title,
+    price: Number(props.price),
+    image: props.image,
+  })
+}
 </script>
 
 <template>
@@ -61,6 +75,7 @@ defineProps({
       >
         <button
           class="w-full cursor-pointer bg-black text-white py-2 rounded hover:bg-gray-800 transition-colors text-sm font-medium"
+          @click.stop="handleAddToCart"
         >
           Add To Cart
         </button>
@@ -76,8 +91,8 @@ defineProps({
 
       <!-- Price -->
       <div class="flex items-center gap-3">
-        <span class="text-red-500 font-semibold text-base md:text-lg">${{ price }}</span>
-        <span v-if="oldPrice" class="text-gray-400 line-through text-sm">${{ oldPrice }}</span>
+        <span class="text-red-500 font-semibold text-base md:text-lg">Rp.{{ price }}</span>
+        <span v-if="oldPrice" class="text-gray-400 line-through text-sm">Rp.{{ oldPrice }}</span>
       </div>
 
       <!-- Rating -->

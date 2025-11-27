@@ -49,7 +49,7 @@ const bestSellingProducts = [
 // Explore Our Products Data
 const exploreProducts = [
   {
-    id: 1,
+    id: 5,
     title: 'Havit H2002D Pink Gaming Headset',
     price: 100,
     oldPrice: null,
@@ -58,7 +58,7 @@ const exploreProducts = [
     image: '/pink-headset.png',
   },
   {
-    id: 2,
+    id: 6,
     title: 'ASUS TUF Gaming F15 Laptop',
     price: 360,
     oldPrice: null,
@@ -67,7 +67,7 @@ const exploreProducts = [
     image: '/laptop.png',
   },
   {
-    id: 3,
+    id: 7,
     title: 'Logitech F710 Wireless Gamepad',
     price: 700,
     oldPrice: null,
@@ -76,7 +76,7 @@ const exploreProducts = [
     image: '/gamepad.png',
   },
   {
-    id: 4,
+    id: 8,
     title: 'Apple AirPods Max Over-Ear Headphones',
     price: 500,
     oldPrice: null,
@@ -85,7 +85,7 @@ const exploreProducts = [
     image: '/airpods.png',
   },
   {
-    id: 5,
+    id: 9,
     title: 'Canon EOS 200D II DSLR Camera',
     price: 960,
     oldPrice: null,
@@ -94,7 +94,7 @@ const exploreProducts = [
     image: '/camera.png',
   },
   {
-    id: 6,
+    id: 10,
     title: 'Apple iPhone 14 Pro Max',
     price: 1160,
     oldPrice: null,
@@ -103,7 +103,7 @@ const exploreProducts = [
     image: '/iphone-14.png',
   },
   {
-    id: 7,
+    id: 11,
     title: 'Amazfit GTR 3 Smart Watch',
     price: 660,
     oldPrice: null,
@@ -112,7 +112,7 @@ const exploreProducts = [
     image: '/watch.png',
   },
   {
-    id: 8,
+    id: 12,
     title: 'Apple Pencil (2nd Generation)',
     price: 660,
     oldPrice: null,
@@ -153,6 +153,7 @@ const exploreProducts = [
         <ProductCard
           v-for="product in bestSellingProducts"
           :key="product.id"
+          :id="product.id"
           :title="product.title"
           :price="product.price"
           :old-price="product.oldPrice"
@@ -202,6 +203,7 @@ const exploreProducts = [
         <ProductCard
           v-for="product in exploreProducts"
           :key="product.id"
+          :id="product.id"
           :title="product.title"
           :price="product.price"
           :old-price="product.oldPrice"
