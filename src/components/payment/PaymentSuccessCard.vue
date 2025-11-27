@@ -10,7 +10,7 @@ defineOptions({
 let storedOrder = null
 try {
   storedOrder = JSON.parse(localStorage.getItem('emotix_last_order') || 'null')
-} catch (e) {
+} catch {
   storedOrder = null
 }
 
