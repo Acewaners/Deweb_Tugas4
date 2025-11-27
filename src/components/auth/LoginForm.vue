@@ -15,28 +15,51 @@ const remember = ref(false)
 const loading = ref(false)
 const errorMessage = ref('')
 
+// Hapus pesan error saat input berubah
 const clearError = () => {
   if (errorMessage.value) errorMessage.value = ''
 }
 
+// Fungsi utama login
 const onLogin = () => {
   errorMessage.value = ''
-  loading.value = true
-
   const emailVal = email.value.trim()
   const passVal = password.value.trim()
 
-  // VALIDASI BENAR: SALAH SATU KOSONG → ERROR
+  // Validasi kosong
   if (!emailVal || !passVal) {
     errorMessage.value = 'Email dan Password harus diisi.'
+    return
+  }
+
+  loading.value = true
+
+  // Ambil user yang sudah diregister
+  const registered = JSON.parse(
+    localStorage.getItem('emotix_registered_user') || 'null'
+  )
+
+  // Validasi akun
+  if (
+    !registered ||
+    registered.email !== emailVal ||
+    registered.password !== passVal
+  ) {
+    errorMessage.value = 'Email atau password salah.'
     loading.value = false
     return
   }
 
-  // anggap login berhasil (dummy)
-  login(emailVal || 'User')
+  // Login berhasil → simpan data ke authStore
+  login({
+    name: registered.name,
+    email: registered.email,
+  })
 
   loading.value = false
+  password.value = '' // bersihkan biar aman
+
+  // Redirect ke home / akun
   router.push('/')
 }
 </script>
@@ -48,18 +71,15 @@ const onLogin = () => {
     </h2>
 
     <form @submit.prevent="onLogin">
+      <!-- Email -->
       <div class="mb-6">
-        <label
-          for="email"
-          class="block text-sm text-neutral-500 mb-2"
-        >
+        <label for="email" class="block text-sm text-neutral-500 mb-2">
           Email address
         </label>
         <input
           v-model="email"
           @input="clearError"
           id="email"
-          name="email"
           type="email"
           class="block w-full rounded border border-neutral-200 bg-transparent
                  px-3 py-2 leading-normal outline-none transition-shadow duration-150
@@ -69,18 +89,15 @@ const onLogin = () => {
         />
       </div>
 
+      <!-- Password -->
       <div class="mb-6">
-        <label
-          for="password"
-          class="block text-sm text-neutral-500 mb-2"
-        >
+        <label for="password" class="block text-sm text-neutral-500 mb-2">
           Password
         </label>
         <input
           v-model="password"
           @input="clearError"
           id="password"
-          name="password"
           type="password"
           class="block w-full rounded border border-neutral-200 bg-transparent
                  px-3 py-2 leading-normal outline-none transition-shadow duration-150
@@ -90,6 +107,7 @@ const onLogin = () => {
         />
       </div>
 
+      <!-- Remember me -->
       <div class="mb-6 flex items-center">
         <input
           id="remember"
@@ -100,6 +118,7 @@ const onLogin = () => {
         <label for="remember" class="text-sm">Remember me</label>
       </div>
 
+      <!-- Tombol login -->
       <div class="mb-4 flex items-center gap-4">
         <button
           type="submit"
@@ -122,10 +141,12 @@ const onLogin = () => {
         </RouterLink>
       </div>
 
+      <!-- Pesan error -->
       <p v-if="errorMessage" class="text-sm text-red-500 mb-2">
         {{ errorMessage }}
       </p>
 
+      <!-- Forgot password -->
       <a
         href="#!"
         class="text-sm text-red-500 hover:underline dark:text-red-400"

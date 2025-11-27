@@ -1,10 +1,11 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 
 defineOptions({
   name: 'AccountProfileForm',
 })
 
+// ==== PROPS ====
 const props = defineProps({
   firstName: {
     type: String,
@@ -14,8 +15,18 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  // email & address sekarang datang dari luar (AccountView)
+  email: {
+    type: String,
+    default: '',
+  },
+  address: {
+    type: String,
+    default: '',
+  },
 })
 
+// ==== EMITS (buat v-model firstName & lastName) ====
 const emit = defineEmits(['update:firstName', 'update:lastName'])
 
 // v-model bridging untuk firstName & lastName
@@ -29,9 +40,24 @@ const lastNameModel = computed({
   set: (val) => emit('update:lastName', val),
 })
 
-// sisanya lokal di komponen ini
-const email = ref('rimel111@gmail.com')
-const address = ref('Kingston, 5236, United States')
+// ==== Email & Address: lokal tapi di-seed dari props ====
+const email = ref(props.email || '')
+const address = ref(props.address || '')
+
+// kalau suatu saat props.email / props.address berubah, form ikut update
+watch(
+  () => props.email,
+  (val) => {
+    email.value = val || ''
+  },
+)
+
+watch(
+  () => props.address,
+  (val) => {
+    address.value = val || ''
+  },
+)
 
 const currentPassword = ref('')
 const newPassword = ref('')

@@ -1,7 +1,6 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter, RouterLink } from 'vue-router'
-import { login } from '@/stores/authStore'
 
 defineOptions({
   name: 'RegisterForm',
@@ -25,37 +24,39 @@ const onRegister = () => {
     return
   }
 
+  // Simulasikan proses registrasi dummy
+  setTimeout(() => {
+    // Simpan data sementara ke localStorage (bukan auto-login)
+    const newUser = {
+      name: nama.value.trim(),
+      email: email.value.trim(),
+      password: password.value.trim(),
+    }
+
+    localStorage.setItem('emotix_registered_user', JSON.stringify(newUser))
+
     loading.value = false
-    setTimeout(() => {
-      login(email.value || 'User')
-      loading.value = false
-    }, 200)
-    alert('Registrasi berhasil')
+    alert('Registrasi berhasil! Silakan login untuk melanjutkan.')
     router.push('/login')
+  }, 600)
 }
 </script>
 
 <template>
   <div>
-    <!-- Judul -->
     <h2 class="text-3xl font-semibold text-black mb-4">
       Create an account
     </h2>
 
-    <!-- Form -->
     <form class="space-y-4" @submit.prevent="onRegister">
       <!-- Nama -->
       <div>
-        <label
-          for="nama"
-          class="block text-sm text-neutral-500 mb-2"
-        >
+        <label for="nama" class="block text-sm text-neutral-500 mb-2">
           Nama
         </label>
         <input
           v-model="nama"
           id="nama"
-          name="nama"
           type="text"
           class="block w-full rounded border border-neutral-200 bg-transparent
                  px-3 py-2 leading-normal outline-none transition-shadow duration-150
@@ -67,16 +68,12 @@ const onRegister = () => {
 
       <!-- Email -->
       <div>
-        <label
-          for="email"
-          class="block text-sm text-neutral-500 mb-2"
-        >
+        <label for="email" class="block text-sm text-neutral-500 mb-2">
           Email
         </label>
         <input
           v-model="email"
           id="email"
-          name="email"
           type="email"
           class="block w-full rounded border border-neutral-200 bg-transparent
                  px-3 py-2 leading-normal outline-none transition-shadow duration-150
@@ -88,16 +85,12 @@ const onRegister = () => {
 
       <!-- Password -->
       <div>
-        <label
-          for="password"
-          class="block text-sm text-neutral-500 mb-2"
-        >
+        <label for="password" class="block text-sm text-neutral-500 mb-2">
           Password
         </label>
         <input
           v-model="password"
           id="password"
-          name="password"
           type="password"
           class="block w-full rounded border border-neutral-200 bg-transparent
                  px-3 py-2 leading-normal outline-none transition-shadow duration-150
@@ -121,7 +114,7 @@ const onRegister = () => {
         <span v-else>Processing...</span>
       </button>
 
-      <!-- Tombol Google -->
+      <!-- Google -->
       <button
         type="button"
         class="w-full flex items-center justify-center text-gray-900 bg-white border
@@ -165,7 +158,7 @@ const onRegister = () => {
         </RouterLink>
       </p>
 
-      <!-- Error message (dummy) -->
+      <!-- Error message -->
       <p v-if="errorMessage" class="text-sm text-red-500 mt-1">
         {{ errorMessage }}
       </p>
