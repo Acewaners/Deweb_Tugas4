@@ -10,10 +10,11 @@ import {
   ShoppingBagIcon,
   NoSymbolIcon,
   StarIcon,
-  ArrowLeftOnRectangleIcon,
+  ArrowLeftOnRectangleIcon, // <- ini tadi hilang
 } from '@heroicons/vue/24/outline'
 import { cartItemCount } from '@/stores/cartStore'
 import { authState, logout as authLogout } from '@/stores/authStore'
+import { wishlistCount } from '@/stores/wishlistStore'
 
 defineOptions({
   name: 'TheNavbar',
@@ -58,7 +59,7 @@ onBeforeUnmount(() => {
   window.removeEventListener('click', handleClickOutside)
 })
 
-// Logout dummy – nanti sambungkan ke auth beneran (hapus token, clear store, dll)
+// Logout
 const handleLogout = () => {
   authLogout()
   isAccountMenuOpen.value = false
@@ -123,16 +124,27 @@ const handleLogout = () => {
 
         <!-- Icons - Right -->
         <div class="flex items-center gap-6">
-          <!-- Desktop Icons -->
-          <div class="hidden lg:flex items-center gap-6">
-            <button
-              class="text-black hover:text-gray-600 cursor-pointer transition-colors"
+          <!-- Desktop Icons: hanya saat SUDAH login -->
+          <div
+            v-if="authState.isAuthenticated"
+            class="hidden lg:flex items-center gap-6"
+          >
+            <!-- WISHLIST DESKTOP: ke /wishlist + badge jumlah -->
+            <RouterLink
+              to="/wishlist"
+              class="relative text-black hover:text-gray-600 cursor-pointer transition-colors"
               aria-label="Wishlist"
             >
               <HeartIcon class="w-6 h-6" />
-            </button>
+              <span
+                v-if="wishlistCount > 0"
+                class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center font-medium"
+              >
+                {{ wishlistCount }}
+              </span>
+            </RouterLink>
 
-            <!-- Cart desktop: link ke /cart -->
+            <!-- Cart desktop -->
             <RouterLink
               to="/cart"
               class="relative text-black hover:text-gray-600 cursor-pointer transition-colors"
@@ -156,7 +168,6 @@ const handleLogout = () => {
                 <UserIcon class="w-6 h-6" />
               </button>
 
-              <!-- Dropdown -->
               <div
                 v-if="isAccountMenuOpen"
                 class="absolute right-0 mt-3 w-64 bg-teal-500 text-white rounded-lg shadow-lg py-3 z-50"
@@ -246,7 +257,7 @@ const handleLogout = () => {
             About
           </RouterLink>
 
-          <!-- Sign Up mobile: sama, hanya saat belum login -->
+          <!-- Sign Up mobile: hanya saat belum login -->
           <RouterLink
             v-if="!authState.isAuthenticated"
             to="/signup"
@@ -256,13 +267,27 @@ const handleLogout = () => {
             Sign Up
           </RouterLink>
 
-          <!-- Mobile Icons -->
-          <div class="flex items-center gap-6 px-4 pt-4 border-t border-gray-100">
-            <button class="text-black hover:text-gray-600 transition-colors" aria-label="Wishlist">
+          <!-- Mobile Icons: juga hanya saat SUDAH login -->
+          <div
+            v-if="authState.isAuthenticated"
+            class="flex items-center gap-6 px-4 pt-4 border-t border-gray-100"
+          >
+            <!-- Wishlist mobile -->
+            <RouterLink
+              to="/wishlist"
+              @click="closeMobileMenu"
+              class="relative text-black hover:text-gray-600 transition-colors"
+              aria-label="Wishlist"
+            >
               <HeartIcon class="w-6 h-6" />
-            </button>
+              <span
+                v-if="wishlistCount > 0"
+                class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center font-medium"
+              >
+                {{ wishlistCount }}
+              </span>
+            </RouterLink>
 
-            <!-- Cart mobile: link ke /cart juga -->
             <RouterLink
               to="/cart"
               @click="closeMobileMenu"

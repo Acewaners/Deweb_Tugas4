@@ -13,11 +13,12 @@ const props = defineProps({
   },
 })
 
+// Hanya item yang selected !== false yang dihitung
 const cartSubtotal = computed(() =>
-  props.items.reduce(
-    (sum, item) => sum + (item.price ?? 0) * (item.quantity ?? 0),
-    0,
-  ),
+  props.items.reduce((sum, item) => {
+    if (item.selected === false) return sum
+    return sum + (item.price ?? 0) * (item.quantity ?? 0)
+  }, 0),
 )
 
 const shippingCost = computed(() => 0)
@@ -59,5 +60,3 @@ const cartTotal = computed(() => cartSubtotal.value + shippingCost.value)
     </div>
   </div>
 </template>
-
-<style scoped></style>

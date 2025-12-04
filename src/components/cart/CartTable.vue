@@ -12,10 +12,14 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['update-quantity'])
+const emit = defineEmits(['update-quantity', 'update-selected'])
 
 const handleUpdateQuantity = (item, qty) => {
   emit('update-quantity', item, qty)
+}
+
+const handleUpdateSelected = (item, selected) => {
+  emit('update-selected', item, selected)
 }
 </script>
 
@@ -38,8 +42,7 @@ const handleUpdateQuantity = (item, qty) => {
       :item="item"
       :formatCurrency="props.formatCurrency"
       @update-quantity="handleUpdateQuantity"
+      @update-selected="handleUpdateSelected"
     />
   </section>
 </template>
-
-<style scoped></style>

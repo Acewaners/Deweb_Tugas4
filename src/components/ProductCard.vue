@@ -1,11 +1,17 @@
 <script setup>
+import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { HeartIcon, EyeIcon } from '@heroicons/vue/24/outline'
 import { StarIcon } from '@heroicons/vue/24/solid'
 import { addToCart } from '@/stores/cartStore'
+import { authState } from '@/stores/authStore'
+import { toggleWishlist, isInWishlist } from '@/stores/wishlistStore'
 
 defineOptions({
   name: 'ProductCard',
 })
+
+const router = useRouter()
 
 const props = defineProps({
   id: {
@@ -38,8 +44,37 @@ const props = defineProps({
   },
 })
 
+// ADD TO CART – hanya boleh kalau sudah login
 const handleAddToCart = () => {
+  if (!authState.isAuthenticated) {
+    router.push({
+      path: '/signup',
+      query: { redirect: router.currentRoute.value.fullPath },
+    })
+    return
+  }
+
   addToCart({
+    id: props.id,
+    title: props.title,
+    price: Number(props.price),
+    image: props.image,
+  })
+}
+
+// WISHLIST
+const inWishlist = computed(() => isInWishlist(props.id))
+
+const handleToggleWishlist = () => {
+  if (!authState.isAuthenticated) {
+    router.push({
+      path: '/signup',
+      query: { redirect: router.currentRoute.value.fullPath },
+    })
+    return
+  }
+
+  toggleWishlist({
     id: props.id,
     title: props.title,
     price: Number(props.price),
@@ -54,9 +89,22 @@ const handleAddToCart = () => {
   >
     <!-- Wishlist & Eye Icons -->
     <div class="absolute top-3 right-3 flex flex-col space-y-2 z-10">
-      <button class="bg-white rounded-full p-1.5 shadow-sm hover:bg-gray-50 transition-colors">
-        <HeartIcon class="w-5 h-5 text-gray-600 hover:text-red-500 transition-colors" />
+      <!-- HEART: toggle wishlist -->
+      <button
+        class="bg-white rounded-full p-1.5 shadow-sm hover:bg-gray-50 transition-colors"
+        @click.stop="handleToggleWishlist"
+      >
+        <HeartIcon
+          class="w-5 h-5 transition-colors"
+          :class="
+            inWishlist
+              ? 'text-red-500'
+              : 'text-gray-600 hover:text-red-500'
+          "
+        />
       </button>
+
+      <!-- Eye (belum ada fungsi khusus) -->
       <button class="bg-white rounded-full p-1.5 shadow-sm hover:bg-gray-50 transition-colors">
         <EyeIcon class="w-5 h-5 text-gray-600 hover:text-black transition-colors" />
       </button>
@@ -64,12 +112,10 @@ const handleAddToCart = () => {
 
     <!-- Product Image Container -->
     <div class="relative">
-      <!-- Product Image -->
       <div class="aspect-square flex items-center justify-center py-4">
         <img :src="image" :alt="title" class="w-full h-full object-contain" />
       </div>
 
-      <!-- Add to Cart Button (appears on hover with animation) -->
       <div
         class="absolute bottom-0 left-0 right-0 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300 ease-out"
       >
@@ -84,18 +130,15 @@ const handleAddToCart = () => {
 
     <!-- Product Info -->
     <div class="space-y-2 mt-4">
-      <!-- Product Title -->
       <h3 class="font-medium text-sm md:text-base line-clamp-2 min-h-10">
         {{ title }}
       </h3>
 
-      <!-- Price -->
       <div class="flex items-center gap-3">
         <span class="text-red-500 font-semibold text-base md:text-lg">Rp.{{ price }}</span>
         <span v-if="oldPrice" class="text-gray-400 line-through text-sm">Rp.{{ oldPrice }}</span>
       </div>
 
-      <!-- Rating -->
       <div class="flex items-center gap-2">
         <div class="flex items-center">
           <StarIcon v-for="star in 5" :key="star" class="w-4 h-4 text-yellow-400" />
@@ -106,6 +149,4 @@ const handleAddToCart = () => {
   </div>
 </template>
 
-<style scoped>
-/* Additional styles if needed */
-</style>
+<style scoped></style>

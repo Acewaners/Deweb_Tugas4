@@ -12,11 +12,16 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['update-quantity'])
+const emit = defineEmits(['update-quantity', 'update-selected'])
 
 const onChangeQuantity = (event) => {
   const qty = Number(event.target.value)
   emit('update-quantity', props.item, qty)
+}
+
+const onToggleSelected = (event) => {
+  const checked = event.target.checked
+  emit('update-selected', props.item, checked)
 }
 
 const itemSubtotal = computed(
@@ -27,8 +32,16 @@ const itemSubtotal = computed(
 <template>
   <div class="border-b border-gray-100 last:border-b-0">
     <div class="grid grid-cols-4 gap-4 px-6 py-4 items-center text-sm">
-      <!-- Product -->
+      <!-- Product + Checkbox -->
       <div class="flex items-center gap-3">
+        <!-- Checkbox untuk pilih item -->
+        <input
+          type="checkbox"
+          class="h-4 w-4 text-red-500 border-gray-300 rounded"
+          :checked="item.selected ?? true"
+          @change="onToggleSelected"
+        />
+
         <img
           :src="item.image"
           :alt="item.title"
@@ -64,5 +77,3 @@ const itemSubtotal = computed(
     </div>
   </div>
 </template>
-
-<style scoped></style>

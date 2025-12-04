@@ -1,6 +1,5 @@
 <script setup>
 import { computed } from 'vue'
-import OrderItemRow from './OrderItemRow.vue'
 
 const props = defineProps({
   items: {
@@ -13,8 +12,13 @@ const props = defineProps({
   },
 })
 
+// HANYA item yang selected yang ditampilkan
+const checkoutItems = computed(() =>
+  (props.items || []).filter((item) => item.selected !== false),
+)
+
 const cartSubtotal = computed(() =>
-  props.items.reduce(
+  checkoutItems.value.reduce(
     (sum, item) => sum + (item.price ?? 0) * (item.quantity ?? 0),
     0,
   ),
@@ -26,32 +30,52 @@ const cartTotal = computed(() => cartSubtotal.value + shippingCost.value)
 
 <template>
   <div class="bg-white rounded-md shadow-sm border border-gray-200 p-6 space-y-4">
-    <!-- Daftar produk -->
-    <OrderItemRow
-      v-for="item in items"
-      :key="item.id"
-      :item="item"
-      :formatCurrency="formatCurrency"
-    />
+    <h2 class="text-sm md:text-base font-semibold text-gray-900">
+      Your Order
+    </h2>
 
-    <!-- Ringkasan angka -->
-    <div class="space-y-2 text-xs md:text-sm text-gray-700">
-      <div class="flex justify-between border-b border-gray-100 pb-2">
-        <span>Subtotal</span>
+    <!-- daftar item: pakai checkoutItems -->
+    <div class="divide-y divide-gray-100 text-xs md:text-sm text-gray-700">
+      <div
+        v-for="item in checkoutItems"
+        :key="item.id"
+        class="flex items-center justify-between py-2"
+      >
+        <div class="flex items-center gap-3">
+          <img
+            :src="item.image"
+            :alt="item.title"
+            class="w-10 h-10 object-contain"
+          />
+          <div class="flex flex-col">
+            <span class="text-gray-800">
+              {{ item.title }}
+            </span>
+            <span class="text-gray-500 text-xs">
+              x{{ item.quantity }}
+            </span>
+          </div>
+        </div>
+        <span class="text-gray-700">
+          {{ formatCurrency((item.price ?? 0) * (item.quantity ?? 0)) }}
+        </span>
+      </div>
+
+      <!-- summary -->
+      <div class="flex justify-between pt-3">
+        <span class="font-medium">Subtotal</span>
         <span>{{ formatCurrency(cartSubtotal) }}</span>
       </div>
-
-      <div class="flex justify-between border-b border-gray-100 pb-2">
-        <span>Shipping</span>
+      <div class="flex justify-between">
+        <span class="font-medium">Shipping</span>
         <span>Free</span>
       </div>
-
-      <div class="flex justify-between">
-        <span class="font-medium">Total</span>
-        <span class="font-medium">
-          {{ formatCurrency(cartTotal) }}
-        </span>
+      <div class="flex justify-between font-semibold">
+        <span>Total</span>
+        <span>{{ formatCurrency(cartTotal) }}</span>
       </div>
     </div>
   </div>
 </template>
+
+<style scoped></style>
