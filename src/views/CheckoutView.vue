@@ -18,6 +18,11 @@ const router = useRouter()
 // ambil item dari store
 const cartItems = computed(() => cartState.items)
 
+// HANYA item yang dicentang yang ikut checkout
+const checkoutItems = computed(() =>
+  cartItems.value.filter((item) => item.selected !== false),
+)
+
 // billing data dibungkus jadi satu object (dipakai v-model di BillingForm)
 const billingData = ref({
   firstName: '',
@@ -54,6 +59,18 @@ const applyCoupon = () => {
     'Coupon diterapkan (dummy). Diskon sebenarnya belum terhubung ke backend.'
 }
 
+// ---- VALIDASI PHONE NUMBER ----
+const validatePhoneNumber = () => {
+  const value = billingData.value.phoneNumber.trim()
+  const regex = /^08\d{10}$/   // 08 + 10 digit = 12 digit total
+
+  if (!regex.test(value)) {
+    alert('Phone Number harus 12 digit dan dimulai dengan 08 (contoh: 081234567890).')
+    return false
+  }
+  return true
+}
+
 // ---- PLACE ORDER → lanjut ke /payment ----
 const placeOrder = () => {
   const d = billingData.value
@@ -66,9 +83,14 @@ const placeOrder = () => {
     return
   }
 
-  // validasi cart
-  if (cartItems.value.length === 0) {
-    alert('Cart kamu kosong. Tambahkan produk terlebih dahulu.')
+  // VALIDASI FORMAT HP
+  if (!validatePhoneNumber()) {
+    return
+  }
+
+  // validasi cart: minimal ada item yang dipilih
+  if (checkoutItems.value.length === 0) {
+    alert('Pilih minimal satu produk di Cart (centang) sebelum checkout.')
     return
   }
 
@@ -117,7 +139,7 @@ const placeOrder = () => {
 
         <!-- Kanan: Ringkasan order + Payment + Coupon -->
         <section class="space-y-4">
-          <OrderSummary :items="cartItems" :formatCurrency="formatCurrency" />
+          <OrderSummary :items="checkoutItems" :formatCurrency="formatCurrency" />
 
           <PaymentMethodSelector v-model="paymentMethod" />
 

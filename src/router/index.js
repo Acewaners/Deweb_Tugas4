@@ -12,6 +12,7 @@ import CancellationsView from '@/views/CancellationsView.vue'
 import ReviewsView from '@/views/ReviewsView.vue'
 import AboutView from '@/views/AboutView.vue'
 import CartView from '@/views/CartView.vue'
+import WishlistView from '@/views/WishlistView.vue'
 import CheckoutView from '@/views/CheckoutView.vue'
 import PaymentView from '@/views/PaymentView.vue'
 import PaymentSuccessView from '@/views/PaymentSuccessView.vue'
@@ -67,6 +68,12 @@ const router = createRouter({
       path: '/cart',
       name: 'cart',
       component: CartView,
+    },
+
+    {
+      path: '/wishlist',
+      name: 'wishlist',
+      component: WishlistView,
     },
 
     // Route untuk menu About di navbar

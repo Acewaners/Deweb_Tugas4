@@ -37,6 +37,11 @@ const applyCoupon = () => {
   couponMessage.value =
     'Kupon diterapkan (dummy). Fitur ini belum terhubung ke backend.'
 }
+
+// NEW: update status selected
+const updateSelected = (item, selected) => {
+  item.selected = selected
+}
 </script>
 
 <template>
@@ -54,22 +59,19 @@ const applyCoupon = () => {
         <span class="text-gray-900 font-medium">Cart</span>
       </p>
 
-      <!-- Cart kosong -->
       <CartEmptyState v-if="cartItems.length === 0" />
 
-      <!-- Cart ada isi -->
       <template v-else>
         <CartTable
           :items="cartItems"
           :formatCurrency="formatCurrency"
           @update-quantity="updateQuantity"
+          @update-selected="updateSelected"
         />
 
-        <!-- Bottom area -->
         <section
           class="grid grid-cols-1 md:grid-cols-3 gap-6 md:items-start"
         >
-          <!-- Left: buttons + coupon -->
           <div class="md:col-span-2">
             <CartActions
               v-model:couponCode="couponCode"
@@ -78,7 +80,6 @@ const applyCoupon = () => {
             />
           </div>
 
-          <!-- Right: Cart Total -->
           <CartTotals
             :items="cartItems"
             :formatCurrency="formatCurrency"
@@ -88,5 +89,3 @@ const applyCoupon = () => {
     </div>
   </div>
 </template>
-
-<style scoped></style>

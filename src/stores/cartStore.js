@@ -1,4 +1,3 @@
-// src/stores/cartStore.js
 import { reactive, computed } from 'vue'
 
 const state = reactive({
@@ -26,13 +25,14 @@ function addToCart(product) {
       price: product.price,
       image: product.image,
       quantity: product.quantity ?? 1,
+      selected: product.selected ?? true, // <- penting
     })
   }
 }
 
 function removeFromCart(id) {
   const index = state.items.findIndex((item) => item.id === id)
-  if (index !== -1) state.items.splice(index, 1)
+  if (index !== -1) state.items.splice(index, 1) // betulkan splice-nya
 }
 
 function clearCart() {
